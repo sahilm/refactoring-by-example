@@ -4,11 +4,20 @@ public class User {
 
     private final String name;
 
+    public enum LANGS {
+        ENGLISH, IRISH
+    }
+
     public User(String name) {
         this.name = name;
     }
 
-    public String greet() {
-        return String.format("%s, %s", "Hello", name);
+    // TODO: Support greeting in English and Irish
+    public String greet(LANGS language) {
+        String greeting = switch (language) {
+            case ENGLISH -> "Hello";
+            case IRISH -> "Dia dhuit";
+        };
+        return String.format("%s, %s", greeting, name);
     }
 }

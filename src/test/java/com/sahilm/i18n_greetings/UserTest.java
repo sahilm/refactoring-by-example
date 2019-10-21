@@ -13,10 +13,17 @@ class UserTest {
     @DisplayName("greetings")
     class Greetings {
         @Test
-        @DisplayName("it should provide a greeting")
-        void greet() {
+        @DisplayName("it should provide a greeting in English")
+        void greetInEnglish() {
             final var sahil = new User("Sahil");
-            assertThat(sahil.greet()).isEqualTo("Hello, Sahil");
+            assertThat(sahil.greet(User.LANGS.ENGLISH)).isEqualTo("Hello, Sahil");
+        }
+
+        @Test
+        @DisplayName("it should provide a greeting in Irish")
+        void greetInIrish() {
+            final var sahil = new User("Sahil");
+            assertThat(sahil.greet(User.LANGS.IRISH)).isEqualTo("Dia dhuit, Sahil");
         }
     }
 }
