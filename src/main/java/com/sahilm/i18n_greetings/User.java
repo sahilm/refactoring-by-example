@@ -8,7 +8,6 @@ public class User {
         this.name = name;
     }
 
-    // TODO: Support greeting in English, Irish, Hindi and Chinese
     public String greet(Langs lang) {
         return String.format("%s, %s", lang.greeting(), name);
     }
