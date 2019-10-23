@@ -1,0 +1,12 @@
+{
+  "lines": [
+    {
+      "name": "foo",
+      "salary": 1000
+    },
+    {
+      "name": "bar",
+      "salary": 2000
+    }
+  ]
+}
