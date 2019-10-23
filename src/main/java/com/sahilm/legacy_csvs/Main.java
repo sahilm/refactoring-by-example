@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.util.List;
 
 public class Main {
-    // TODO: Drop running totals in JSON. Only total needed
     public static void main(String[] args) throws Exception {
         final var inputFile = new File(args[0]);
         final var outputfile = new File(args[1]);
