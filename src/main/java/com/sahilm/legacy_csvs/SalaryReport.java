@@ -1,63 +1,31 @@
 package com.sahilm.legacy_csvs;
 
-import org.supercsv.cellprocessor.ParseBigDecimal;
-import org.supercsv.cellprocessor.constraint.NotNull;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvBeanReader;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class SalaryReport {
-    public static void generate(File inputFile, File outputFile) throws Exception {
-        final List<Line> lines = new ArrayList<>();
-        try (final var reader = new CsvBeanReader(new FileReader(inputFile), CsvPreference.STANDARD_PREFERENCE)) {
-            final var cellProcessors = new CellProcessor[]{
-                new NotNull(),
-                new ParseBigDecimal(),
-            };
-            final var header = reader.getHeader(true);
-            Line line;
-            while ((line = reader.read(Line.class, header, cellProcessors)) != null) {
-                lines.add(line);
-            }
-        }
-
+    public static List<Line> generate(List<Line> lines) {
+        final var retLines = new ArrayList<Line>(lines.size());
         var runningTotal = BigDecimal.ZERO;
         for (Line line : lines) {
             runningTotal = runningTotal.add(line.salary);
-            line.setRunningTotal(runningTotal);
+            retLines.add(new Line(line.name, line.salary, runningTotal));
         }
-
-        try (final var writer = new CsvBeanWriter(new FileWriter(outputFile), CsvPreference.STANDARD_PREFERENCE)) {
-            final var cellProcessors = new CellProcessor[]{
-                new NotNull(),
-                new NotNull(),
-                new NotNull(),
-            };
-
-            final var header = new String[]{
-                "name",
-                "salary",
-                "runningTotal"
-            };
-            writer.writeHeader(header);
-            for (Line line : lines) {
-                writer.write(line, header, cellProcessors);
-            }
-        }
+        return retLines;
     }
 
     public static class Line {
         private String name;
         private BigDecimal salary;
         private BigDecimal runningTotal;
+
+        public Line(String name, BigDecimal salary, BigDecimal runningTotal) {
+            this.name = name;
+            this.salary = salary;
+            this.runningTotal = runningTotal;
+        }
 
         public Line() {
         }
@@ -84,6 +52,35 @@ public class SalaryReport {
 
         public void setSalary(BigDecimal salary) {
             this.salary = salary;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Line line = (Line) o;
+
+            if (!name.equals(line.name)) return false;
+            if (!salary.equals(line.salary)) return false;
+            return runningTotal.equals(line.runningTotal);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + salary.hashCode();
+            result = 31 * result + runningTotal.hashCode();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", Line.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("salary=" + salary)
+                .add("runningTotal=" + runningTotal)
+                .toString();
         }
     }
 }
