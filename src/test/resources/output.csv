@@ -1,0 +1,5 @@
+name,salary,runningTotal
+Foo,4000,4000
+Bar,6000,10000
+Baz,9000,19000
+Qux,1000,20000
